@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/restic/restic/internal/backend"
 	"github.com/restic/restic/internal/restic"
@@ -18,6 +19,12 @@ func initMultiSnapshotFilter(flags *pflag.FlagSet, filt *restic.SnapshotFilter, 
 	flags.StringArrayVarP(&filt.Hosts, "host", hostShorthand, nil, "only consider snapshots for this `host` (can be specified multiple times)")
 	flags.Var(&filt.Tags, "tag", "only consider snapshots including `tag[,tag,...]` (can be specified multiple times)")
 	flags.StringArrayVar(&filt.Paths, "path", nil, "only consider snapshots including this (absolute) `path` (can be specified multiple times)")
+	if len(filt.Hosts) == 0 {
+		host_val, ok := os.LookupEnv("RESTIC_HOST")
+		if ok {
+			filt.Hosts = []string{host_val}
+		}
+	}
 }
 
 // initSingleSnapshotFilter is used for commands that work on a single snapshot
@@ -26,6 +33,12 @@ func initSingleSnapshotFilter(flags *pflag.FlagSet, filt *restic.SnapshotFilter)
 	flags.StringArrayVarP(&filt.Hosts, "host", "H", nil, "only consider snapshots for this `host`, when snapshot ID \"latest\" is given (can be specified multiple times)")
 	flags.Var(&filt.Tags, "tag", "only consider snapshots including `tag[,tag,...]`, when snapshot ID \"latest\" is given (can be specified multiple times)")
 	flags.StringArrayVar(&filt.Paths, "path", nil, "only consider snapshots including this (absolute) `path`, when snapshot ID \"latest\" is given (can be specified multiple times)")
+	if len(filt.Hosts) == 0 {
+		host_val, ok := os.LookupEnv("RESTIC_HOST")
+		if ok {
+			filt.Hosts = []string{host_val}
+		}
+	}
 }
 
 // FindFilteredSnapshots yields Snapshots, either given explicitly by `snapshotIDs` or filtered from the list of all snapshots.
