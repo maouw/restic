@@ -136,8 +136,8 @@ func init() {
 	f.StringVar(&backupOptions.StdinFilename, "stdin-filename", "stdin", "`filename` to use when reading from stdin")
 	f.Var(&backupOptions.Tags, "tag", "add `tags` for the new snapshot in the format `tag[,tag,...]` (can be specified multiple times)")
 	f.UintVar(&backupOptions.ReadConcurrency, "read-concurrency", 0, "read `n` files concurrently (default: $RESTIC_READ_CONCURRENCY or 2)")
-	f.StringVarP(&backupOptions.Host, "host", "H", os.Getenv("RESTIC_HOST"), "set the `hostname` for the snapshot manually. To prevent an expensive rescan use the \"parent\" flag")
-	f.StringVar(&backupOptions.Host, "hostname", os.Getenv("RESTIC_HOST"), "set the `hostname` for the snapshot manually")
+	f.StringVarP(&backupOptions.Host, "host", "H", os.Getenv("RESTIC_HOST"), "set the `hostname` for the snapshot manually. To prevent an expensive rescan use the \"parent\" flag (default: $RESTIC_HOST)")
+	f.StringVar(&backupOptions.Host, "hostname", os.Getenv("RESTIC_HOST"), "set the `hostname` for the snapshot manually (default: $RESTIC_HOST)")
 	err := f.MarkDeprecated("hostname", "use --host")
 	if err != nil {
 		// MarkDeprecated only returns an error when the flag could not be found
